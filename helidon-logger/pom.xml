@@ -1,0 +1,175 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>io.helidon.applications</groupId>
+		<artifactId>helidon-mp</artifactId>
+		<version>2.5.0</version>
+	</parent>
+	<properties>
+		<mainClass>com.oracle.labs.helidon.logger.Main</mainClass>
+		<libs.classpath.prefix>libs</libs.classpath.prefix>
+		<copied.libs.dir>${project.build.directory}/${libs.classpath.prefix}</copied.libs.dir>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
+		<version.lombok>1.18.24</version.lombok>
+		<version.jib>3.2.1</version.jib>
+		<sonar.skip>true</sonar.skip>
+		<container.image>ghcr.io/graalvm/graalvm-ce:ol8-java17-22.1.0</container.image>
+	</properties>
+	<groupId>com.oracle.labs.helidon</groupId>
+	<artifactId>logger</artifactId>
+	<version>${project.parent.version}</version>
+	<name>${project.artifactId}</name>
+	<description>the sample bill logging example for the helidon labs</description>
+	<dependencies>
+		<dependency>
+			<groupId>io.helidon.microprofile.bundles</groupId>
+			<artifactId>helidon-microprofile</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss</groupId>
+			<artifactId>jandex</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<!-- not quite sure why it fails to run withouh this entry, given this package is imported elsewhere, 
+          but it seems to fail if this isn't present on my system at least -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+		<!-- Utilities -->
+		<!-- Lombok does the auto method creation -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${version.lombok}</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- SLF4J is a logging facade that let's us change the actual logger used 
+			under the covers without changing our code, slf4j-jdk14 is for output to 
+			the standard Java logging utilities. By making the dependency declaration 
+			below Maven will bring in the core SLF4J jar files, and also the SLJ4J to 
+			java.util.logging binding. If the artifact is changed to slf4j-log4j12 then 
+			maven will bring in the SLF4J to log4j binding instead This is commented 
+			out because Helidon itself brings in slf4j, but if you were using a different 
+			version case then you'd need to specify it yourself, to this is here as a 
+			placeholder / reminder -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jdk14</artifactId>
+		</dependency>
+		<!-- tracing calls -->
+		<dependency>
+			<groupId>io.helidon.tracing</groupId>
+			<artifactId>helidon-tracing-zipkin</artifactId>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-dependency-plugin</artifactId> 
+				<executions> <execution> <id>copy-dependencies</id> <phase>prepare-package</phase> 
+				<goals> <goal>copy-dependencies</goal> </goals> <configuration> <outputDirectory>${copied.libs.dir}</outputDirectory> 
+				<overWriteReleases>false</overWriteReleases> <overWriteSnapshots>false</overWriteSnapshots> 
+				<overWriteIfNewer>true</overWriteIfNewer> <overWriteIfNewer>true</overWriteIfNewer> 
+				<includeScope>runtime</includeScope> <excludeScope>test</excludeScope> </configuration> 
+				</execution> </executions> </plugin> -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-libs</id>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.jboss.jandex</groupId>
+				<artifactId>jandex-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>make-index</id>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>${version.jib}</version>
+				<configuration>
+					<from>
+						<image>${container.image}</image>
+					</from>
+					<to>
+						<image>jib-${project.artifactId}</image>
+						<tags>
+							<tag>${project.version}</tag>
+							<tag>latest</tag>
+						</tags>
+					</to>
+					<container>
+						<!-- good defaults intended for containers -->
+						<jvmFlags>
+							<jmxFlag>-server</jmxFlag>
+							<jmxFlag>-Djava.awt.headless=true</jmxFlag>
+							<jmxFlag>-XX:+UnlockExperimentalVMOptions</jmxFlag>
+							<jmxFlag>-XX:+UseG1GC</jmxFlag>
+						</jvmFlags>
+						<mainClass>${mainClass}</mainClass>
+						<ports>
+							<port>8081</port>
+							<port>9081</port>
+						</ports>
+						<volumes>
+							<volume>/conf</volume>
+						</volumes>
+					</container>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>dockerBuild</goal>
+						</goals>
+						<phase>package</phase>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.jboss.jandex
+										</groupId>
+										<artifactId>
+											jandex-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.0.1,)
+										</versionRange>
+										<goals>
+											<goal>jandex</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>
