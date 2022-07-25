@@ -97,14 +97,14 @@ public class BillingResourceImpl implements BillingService {
 		this.billingFileLocation = billingFileLocation;
 		if (!billingFileLocation.equals(NO_LOCATION_SET)) {
 			this.billingFileFile = new File(billingFileLocation);
-			this.writer = new BufferedWriter(new FileWriter(billingFileFile));
+			this.writer = new BufferedWriter(new FileWriter(billingFileFile, true));
 			this.active = true;
 		} else {
 			this.billingFileFile = null;
 			this.writer = null;
 			this.active = false;
 		}
-		log.info("Writing billing data to " + this.billingFileLocation);
+		log.info("Appending billing data to " + this.billingFileLocation);
 	}
 
 	@PreDestroy
@@ -138,7 +138,7 @@ public class BillingResourceImpl implements BillingService {
 	@Counted(name = "billingEntryCounter")
 	public BillingEntryResponse postBillingEntry(
 			@RequestBody(description = "The details of the billing entry", required = true, content = @Content(schema = @Schema(name = "BillingEntry", implementation = BillingEntry.class), example = "{\"callerName\": \"Jack\", \"itemCount\": 10, \"itemName\": \"Pencil\"}")) BillingEntry billingEntry) {
-		log.info("Processing billingEntry " + billingEntry);
+		log.info("Processing billingEntry " + billingEntry.toString());
 		if (active) {
 			try {
 				writer.write(billingEntry.toString());
