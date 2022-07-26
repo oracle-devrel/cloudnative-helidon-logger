@@ -86,6 +86,7 @@ public final class Main {
 		List<Supplier<? extends ConfigSource>> configSourcesToScan = new ArrayList<>(5);
 		configSourcesToScan.add(ConfigSources.file("conf/logger-config.yaml").optional().build());
 		configSourcesToScan.add(ConfigSources.file("conf/logger-network.yaml").optional().build());
+		configSourcesToScan.add(ConfigSources.file("confsecure/logger-security.yaml").build());
 		configSourcesToScan.add(ConfigSources.classpath("META-INF/microprofile-config.properties").build());
 		return Config.builder().sources(configSourcesToScan).build();
 	}

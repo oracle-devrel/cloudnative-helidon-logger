@@ -66,6 +66,7 @@ import com.oracle.labs.helidon.logger.data.BillingEntryResponse;
 import com.oracle.labs.helidon.logger.data.BillingInfo;
 import com.oracle.labs.helidon.logger.interfaces.BillingService;
 
+import io.helidon.security.annotations.Authenticated;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -73,6 +74,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Path("/billing")
 @ApplicationScoped
+@Authenticated
 @Slf4j
 // make all database stuff in the entire class transactional
 public class BillingResourceImpl implements BillingService {
