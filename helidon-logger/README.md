@@ -44,3 +44,12 @@
 
 ### In the cloud - assuming EXTERNAL_IP is set
 `curl -i -k https://store.$EXTERNAL_IP.nip.io/logmgt/health`
+
+## Disclaimer
+
+ORACLE AND ITS AFFILIATES DO NOT PROVIDE ANY WARRANTY WHATSOEVER, EXPRESS OR IMPLIED, FOR ANY SOFTWARE, MATERIAL OR CONTENT OF ANY KIND
+
+## Copyright
+
+Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+The Universal Permissive License (UPL), Version 1.0
