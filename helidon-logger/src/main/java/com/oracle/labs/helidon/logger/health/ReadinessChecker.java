@@ -36,12 +36,12 @@ SOFTWARE.
  */
 package com.oracle.labs.helidon.logger.health;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Readiness;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 /**
  * Readiness is different form Liveness. Readiness ensures that we actually are
@@ -61,7 +61,7 @@ public class ReadinessChecker implements HealthCheck {
 
 	@Override
 	public HealthCheckResponse call() {
-		return HealthCheckResponse.named("logger-ready").state(true).build();
+		return HealthCheckResponse.named("logger-ready").up().build();
 	}
 
 }

@@ -42,16 +42,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -67,6 +57,15 @@ import com.oracle.labs.helidon.logger.data.BillingInfo;
 import com.oracle.labs.helidon.logger.interfaces.BillingService;
 
 import io.helidon.security.annotations.Authenticated;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 
 /**
