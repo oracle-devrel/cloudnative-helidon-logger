@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion><parent>
         <groupId>io.helidon.applications</groupId>
         <artifactId>helidon-mp</artifactId>
-        <version>3.1.2</version>
+        <version>3.2.12</version>
         <relativePath/>
     </parent>
 	<properties>
@@ -11,10 +11,10 @@
 		<copied.libs.dir>${project.build.directory}/${libs.classpath.prefix}</copied.libs.dir>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
-		<version.lombok>1.18.26</version.lombok>
+		<version.lombok>1.18.36</version.lombok>
 		<version.jib>3.3.1</version.jib>
 		<sonar.skip>true</sonar.skip>
-		<container.image>ghcr.io/graalvm/graalvm-ce:ol9-java17-22.3.1</container.image>
+		<container.image>ghcr.io/graalvm/jdk-community:17</container.image>
 	</properties>
 	<groupId>com.oracle.labs.helidon</groupId>
 	<artifactId>logger</artifactId>
